@@ -1,7 +1,7 @@
 import { useState } from "react"
 import services from "../services/blogs"
 
-const NewBlogForm = ({ user, handleNewBlog }) => {
+const NewBlogForm = ({ handleNewBlog }) => {
   const [title, setTitle] = useState("")
   const [author, setAuthor] = useState("")
   const [url, setUrl] = useState("")
@@ -11,38 +11,48 @@ const NewBlogForm = ({ user, handleNewBlog }) => {
     author: author,
     url: url,
   }
+
   return (
     <div
       style={{
-        display: "flex",
-        border: "red solid 2px",
-        flexDirection: "column",
+        display: "grid",
       }}
     >
       <h2>Create a new blog</h2>
-      <div>
-        <form onSubmit={handleNewBlog}>
-          <label>title:</label>
-          <input
-            type="text"
-            placeholder="title..."
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-          />
-          <label>Author:</label>
-          <input
-            type="text"
-            placeholder="author..."
-            value={author}
-            onChange={(e) => setAuthor(e.target.value)}
-          />
-          <label>url:</label>
-          <input
-            type="url"
-            placeholder="url..."
-            onChange={(e) => setUrl(e.target.value)}
-            value={url}
-          />
+      <div style={{ width: "100%", boxSizing: "border-box" }}>
+        <form onSubmit={(e) => handleNewBlog(e, data)}>
+          <div className="formClass">
+            <label>title:</label>
+            <input
+              type="text"
+              required
+              placeholder="title..."
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+            />
+          </div>
+
+          <div className="formClass">
+            <label>Author:</label>
+            <input
+              type="text"
+              placeholder="author..."
+              value={author}
+              onChange={(e) => setAuthor(e.target.value)}
+            />
+          </div>
+          <div className="formClass">
+            <label>url:</label>
+            <input
+              type="url"
+              size="25"
+              required
+              placeholder="https://example.com"
+              onChange={(e) => setUrl(e.target.value)}
+              value={url}
+            />
+          </div>
+
           <button type="submit">Create</button>
         </form>
       </div>

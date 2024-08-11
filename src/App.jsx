@@ -11,11 +11,19 @@ const App = () => {
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const [user, setUser] = useState(null)
-  const [message, setMessage] = useState("")
+  const [serverMessage, setServerMessage] = useState("")
 
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs))
-  }, [])
+    const getUser = async () => {
+      const data = await blogService.getAll()
+      if (data) {
+        setBlogs(data)
+        return data
+      }
+    }
+
+    getUser()
+  }, [blogs.length])
 
   useEffect(() => {
     const token = window.localStorage.getItem("token")
@@ -25,7 +33,7 @@ const App = () => {
     }
   }, [])
 
-  const handleSubmit = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault()
     try {
       const token = await loginService.login({
@@ -38,18 +46,28 @@ const App = () => {
       setUsername("")
       setPassword("")
     } catch (error) {
-      console.error(error.response.data.error)
-      setMessage(error.response.data.error)
+      console.error(error.response.data)
+      setServerMessage(error.response.data.error)
       setTimeout(() => {
-        setMessage("")
-      }, 2000)
+        setServerMessage("")
+      }, 3000)
     }
   }
 
-  const handleNewBlog = async (e) => {
+  const handleNewBlog = async (e, data) => {
     e.preventDefault()
     try {
-    } catch (error) {}
+      const newBlog = await blogService.saveBlog(user, data)
+      setBlogs([...blogs, newBlog])
+      setServerMessage(
+        `A new blog added: ${newBlog.data.title}! by ${newBlog.data.author}!`
+      )
+      setTimeout(() => {
+        setServerMessage("")
+      }, 3000)
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   const handleLocalStorage = () => {
@@ -71,6 +89,13 @@ const App = () => {
       ) : (
         <div>
           <h2>Blogs</h2>
+          {serverMessage === "" ? (
+            ""
+          ) : serverMessage.startsWith("A new blog added:") ? (
+            <ValidationMessage serverMessage={serverMessage} />
+          ) : (
+            ""
+          )}
           <h2>Welcome {user.username}</h2>
           {blogs.map((blog) => (
             <Blog key={blog.id} blog={blog} />
@@ -79,7 +104,7 @@ const App = () => {
       )}
       {user === null ? (
         <LoginForm
-          handleSubmit={handleSubmit}
+          handleLogin={handleLogin}
           getUser={getUser}
           getPassword={getPassword}
           username={username}
@@ -89,12 +114,12 @@ const App = () => {
         <button onClick={handleLocalStorage}>logOut</button>
       )}
 
-      {user === null ? (
+      {user === null ? "" : <NewBlogForm handleNewBlog={handleNewBlog} />}
+      {serverMessage === "" || serverMessage.startsWith("A new blog added:") ? (
         ""
       ) : (
-        <NewBlogForm user={user} handleNewBlog={handleNewBlog} />
+        <ValidationMessage serverMessage={serverMessage} />
       )}
-      {message === "" ? "" : <ValidationMessage message={message} />}
     </div>
   )
 }
