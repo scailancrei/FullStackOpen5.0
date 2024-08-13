@@ -1,5 +1,4 @@
 import { useState } from "react"
-import services from "../services/blogs"
 
 const NewBlogForm = ({ handleNewBlog }) => {
   const [title, setTitle] = useState("")
@@ -11,6 +10,13 @@ const NewBlogForm = ({ handleNewBlog }) => {
     author: author,
     url: url,
   }
+  const handleSubmit = (event) => {
+    event.preventDefault()
+    handleNewBlog(data)
+    setTitle("")
+    setAuthor("")
+    setUrl("")
+  }
 
   return (
     <div
@@ -20,7 +26,7 @@ const NewBlogForm = ({ handleNewBlog }) => {
     >
       <h2>Create a new blog</h2>
       <div style={{ width: "100%", boxSizing: "border-box" }}>
-        <form onSubmit={(e) => handleNewBlog(e, data)}>
+        <form onSubmit={handleSubmit}>
           <div className="formClass">
             <label>title:</label>
             <input

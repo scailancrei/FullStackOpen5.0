@@ -16,7 +16,7 @@ const validationMessage = ({ serverMessage }) => {
   return (
     <div style={styles}>
       <div style={{ textSizeAdjust: "auto", marginRight: "30px" }}>
-        {messageStatus}
+        {serverMessage}
       </div>
     </div>
   )
