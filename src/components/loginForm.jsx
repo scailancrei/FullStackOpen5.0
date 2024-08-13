@@ -7,6 +7,7 @@ const LoginForm = ({
 }) => {
   return (
     <div>
+      <h2>Login</h2>
       <form onSubmit={handleLogin}>
         <label htmlFor="username">username:</label>
         <input
@@ -26,8 +27,9 @@ const LoginForm = ({
           onChange={(e) => getPassword(e.target.value)}
           placeholder="Enter a password..."
         />
-
-        <button type="submit">Login</button>
+        <div>
+          <button type="submit">Login</button>
+        </div>
       </form>
     </div>
   )

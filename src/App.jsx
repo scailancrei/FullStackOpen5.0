@@ -1,10 +1,11 @@
-import { useState, useEffect } from "react"
-import Blog from "./components/blog.jsx"
+import { useState, useEffect, useRef } from "react"
+import Blog from "./components/Blog.jsx"
 import LoginForm from "./components/loginForm.jsx"
 import blogService from "./services/blogs"
 import ValidationMessage from "./components/validationMessage.jsx"
 import loginService from "./services/login"
 import NewBlogForm from "./components/newBlogForm.jsx"
+import Togglable from "./components/togglable.jsx"
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -12,6 +13,7 @@ const App = () => {
   const [password, setPassword] = useState("")
   const [user, setUser] = useState(null)
   const [serverMessage, setServerMessage] = useState("")
+  const blogFormRef = useRef()
 
   useEffect(() => {
     const getUser = async () => {
@@ -54,17 +56,18 @@ const App = () => {
     }
   }
 
-  const handleNewBlog = async (e, data) => {
-    e.preventDefault()
+  const handleNewBlog = async (data) => {
     try {
       const newBlog = await blogService.saveBlog(user, data)
-      setBlogs([...blogs, newBlog])
+
+      setBlogs([...blogs, newBlog.data])
       setServerMessage(
         `A new blog added: ${newBlog.data.title}! by ${newBlog.data.author}!`
       )
       setTimeout(() => {
         setServerMessage("")
       }, 3000)
+      blogFormRef.current.handleToggleVisibility()
     } catch (error) {
       console.log(error)
     }
@@ -82,13 +85,26 @@ const App = () => {
   const getPassword = (pass) => {
     setPassword(pass)
   }
+  const handleDelete = async (blogToDelete) => {
+    try {
+      if (
+        window.confirm(`do you want delete this blog ${blogToDelete.title}?`)
+      ) {
+        await blogService.deleteBlog(user, blogToDelete.id)
+        setBlogs(blogs.filter((e) => e.id !== blogToDelete.id))
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   return (
     <div>
+      <h2>Blogs</h2>
       {user === null ? (
         ""
       ) : (
         <div>
-          <h2>Blogs</h2>
           {serverMessage === "" ? (
             ""
           ) : serverMessage.startsWith("A new blog added:") ? (
@@ -97,24 +113,51 @@ const App = () => {
             ""
           )}
           <h2>Welcome {user.username}</h2>
-          {blogs.map((blog) => (
-            <Blog key={blog.id} blog={blog} />
-          ))}
+          {blogs
+            .sort((a, b) => b.likes - a.likes)
+            .map((blog) => (
+              <Blog
+                key={blog.id}
+                user={user}
+                handleDelete={handleDelete}
+                blog={blog}
+              />
+            ))}
         </div>
       )}
       {user === null ? (
-        <LoginForm
-          handleLogin={handleLogin}
-          getUser={getUser}
-          getPassword={getPassword}
-          username={username}
-          password={password}
-        />
+        <Togglable buttonLabel="login">
+          <LoginForm
+            handleLogin={handleLogin}
+            getUser={getUser}
+            getPassword={getPassword}
+            username={username}
+            password={password}
+          />
+        </Togglable>
       ) : (
-        <button onClick={handleLocalStorage}>logOut</button>
+        <button
+          style={{
+            color: "white",
+            fontSize: "20px",
+            borderRadius: "5px",
+            border: "none",
+            backgroundColor: "#4286f6",
+          }}
+          onClick={handleLocalStorage}
+        >
+          logOut
+        </button>
       )}
 
-      {user === null ? "" : <NewBlogForm handleNewBlog={handleNewBlog} />}
+      {user === null ? (
+        ""
+      ) : (
+        <Togglable buttonLabel="newNote" ref={blogFormRef}>
+          <NewBlogForm handleNewBlog={handleNewBlog} />
+        </Togglable>
+      )}
+
       {serverMessage === "" || serverMessage.startsWith("A new blog added:") ? (
         ""
       ) : (
