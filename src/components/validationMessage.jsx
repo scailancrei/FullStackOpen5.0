@@ -1,3 +1,5 @@
+import PropTypes from "prop-types"
+
 const validationMessage = ({ serverMessage }) => {
   let color = ""
   serverMessage.startsWith("A new blog added:")
@@ -20,6 +22,10 @@ const validationMessage = ({ serverMessage }) => {
       </div>
     </div>
   )
+}
+
+validationMessage.propTypes = {
+  serverMessage: PropTypes.string.isRequired,
 }
 
 export default validationMessage

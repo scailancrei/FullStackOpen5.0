@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react"
+import PropTypes from "prop-types"
 import services from "../services/blogs.js"
 
 const Blog = ({ blog, user, handleDelete }) => {
@@ -49,6 +50,12 @@ const Blog = ({ blog, user, handleDelete }) => {
       <button onClick={handleShow}>{show ? "hide" : "show"}</button>
     </div>
   )
+}
+
+Blog.propTypes = {
+  blog: PropTypes.object.isRequired,
+  user: PropTypes.object.isRequired,
+  handleDelete: PropTypes.func.isRequired,
 }
 
 export default Blog
