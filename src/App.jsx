@@ -16,15 +16,16 @@ const App = () => {
   const blogFormRef = useRef()
 
   useEffect(() => {
-    const getUser = async () => {
+    const getBlogsOfUser = async () => {
       const data = await blogService.getAll()
+
       if (data) {
         setBlogs(data)
         return data
       }
     }
 
-    getUser()
+    getBlogsOfUser()
   }, [blogs.length])
 
   useEffect(() => {
@@ -42,7 +43,6 @@ const App = () => {
         username,
         password,
       })
-
       window.localStorage.setItem("token", JSON.stringify(token))
       setUser(token)
       setUsername("")

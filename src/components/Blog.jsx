@@ -35,7 +35,7 @@ const Blog = ({ blog, user, handleDelete }) => {
   }
 
   return (
-    <div style={blogStyle}>
+    <div style={blogStyle} className="blog">
       <div>Title: {blog.title}</div>
       <div className="toShow" style={{ display: show ? "" : "none" }}>
         <div>

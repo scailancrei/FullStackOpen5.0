@@ -6,6 +6,14 @@ const getAll = async () => {
   return request.data
 }
 
+const getBlogsByUser = async (user) => {
+  console.log(user)
+  const response = await axios.get(baseUrl + "/user", {
+    headers: { Authorization: `Bearer ${user.token}` },
+  })
+  return response
+}
+
 const saveBlog = async (user, data) => {
   const response = await axios.post(baseUrl, data, {
     headers: { Authorization: `Bearer ${user.token}` },
@@ -27,4 +35,4 @@ const deleteBlog = async (user, blog) => {
   return response
 }
 
-export default { getAll, saveBlog, modifyLikes, deleteBlog }
+export default { getAll, saveBlog, modifyLikes, deleteBlog, getBlogsByUser }

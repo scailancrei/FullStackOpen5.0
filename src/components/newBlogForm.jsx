@@ -31,6 +31,7 @@ const NewBlogForm = ({ handleNewBlog }) => {
           <div className="formClass">
             <label>title:</label>
             <input
+              id="title"
               type="text"
               required
               placeholder="title..."
@@ -42,6 +43,7 @@ const NewBlogForm = ({ handleNewBlog }) => {
           <div className="formClass">
             <label>Author:</label>
             <input
+              id="author"
               type="text"
               placeholder="author..."
               value={author}
@@ -51,6 +53,7 @@ const NewBlogForm = ({ handleNewBlog }) => {
           <div className="formClass">
             <label>url:</label>
             <input
+              id="url"
               type="url"
               size="25"
               required
