@@ -64,5 +64,39 @@ describe("Blogs app", () => {
         ).should("be.visible")
       })
     })
+
+    describe("Update a blog", () => {
+      it("Increment the number of likes ", () => {
+        cy.contains("new blog").click()
+        cy.get("#title").type("The title is Cypress")
+        cy.get("#author").type("The author is Juan")
+        cy.get("#url").type("http://cypress.com")
+        cy.get("form > button").click()
+        cy.get(
+          '[style="width: 20%; border: 3px solid green; background: rgb(211, 211, 211); padding: 10px; color: green; margin: 10px;"]'
+        ).should("be.visible")
+        cy.get(".blog > :nth-child(3)").should("be.visible").click()
+        cy.get(".toShow > :nth-child(1) > button").click()
+        cy.get(".likes > span").should("contain", 1)
+      })
+    })
+
+    describe("Delete a blog", () => {
+      it("Delete the blog created", () => {
+        cy.contains("new blog").click()
+        cy.get("#title").type("The title is Cypress")
+        cy.get("#author").type("The author is Juan")
+        cy.get("#url").type("http://cypress.com")
+        cy.get("form > button").click()
+        cy.get(
+          '[style="width: 20%; border: 3px solid green; background: rgb(211, 211, 211); padding: 10px; color: green; margin: 10px;"]'
+        ).should("be.visible")
+        //press show button
+        cy.get(".blog > :nth-child(3)").click()
+        //press delete button
+        cy.get(":nth-child(4) > button").should("be.visible").click()
+        cy.get(".blog").should("not.exist")
+      })
+    })
   })
 })

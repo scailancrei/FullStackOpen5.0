@@ -38,8 +38,9 @@ const Blog = ({ blog, user, handleDelete }) => {
     <div style={blogStyle} className="blog">
       <div>Title: {blog.title}</div>
       <div className="toShow" style={{ display: show ? "" : "none" }}>
-        <div>
-          Likes: {likes} <button onClick={incrementLikes}>Like</button>
+        <div className="likes">
+          Likes: <span>{likes}</span>{" "}
+          <button onClick={incrementLikes}>Like</button>
         </div>
         <div>Author: {blog.author}</div>
         <div>Url: {blog.url}</div>
