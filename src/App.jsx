@@ -17,16 +17,19 @@ const App = () => {
 
   useEffect(() => {
     const getBlogsOfUser = async () => {
-      const data = await blogService.getAll()
+      if (user) {
+        console.log(`${user.name} is connected`)
+        const data = await blogService.getBlogsByUser(user)
 
-      if (data) {
-        setBlogs(data)
-        return data
+        if (data) {
+          setBlogs(data.data)
+          return data
+        }
       }
     }
 
     getBlogsOfUser()
-  }, [blogs.length])
+  }, [blogs.length, user])
 
   useEffect(() => {
     const token = window.localStorage.getItem("token")
@@ -153,7 +156,7 @@ const App = () => {
       {user === null ? (
         ""
       ) : (
-        <Togglable buttonLabel="newNote" ref={blogFormRef}>
+        <Togglable buttonLabel="new blog" ref={blogFormRef}>
           <NewBlogForm handleNewBlog={handleNewBlog} />
         </Togglable>
       )}

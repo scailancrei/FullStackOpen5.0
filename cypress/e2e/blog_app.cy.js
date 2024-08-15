@@ -2,14 +2,15 @@
 
 describe("Blogs app", () => {
   beforeEach(function () {
+    cy.visit("http://localhost:5173", { timeout: 10000 })
     //delete BDD of users and create a new one on each execution
     cy.request("DELETE", "http://localhost:3003/api/users")
-    cy.request("POST", "http://localhost:3003/api/users", {
+    const user = {
       name: "Admin123",
       username: "Admin123",
       password: "Admin123",
-    })
-    cy.visit("http://localhost:5173").contains("Blogs")
+    }
+    cy.request("POST", "http://localhost:3003/api/users", user)
   })
 
   describe("Show login", () => {
@@ -49,11 +50,11 @@ describe("Blogs app", () => {
     })
     describe("Create blogs", () => {
       it("Click on create a new blog and show the blog form", () => {
-        cy.contains("newNote").click()
+        cy.contains("new blog").click()
         cy.get("form").should("be.visible")
       })
       it("Fill the form and submit a new blog", () => {
-        cy.contains("newNote").click()
+        cy.contains("new blog").click()
         cy.get("#title").type("The title is Cypress")
         cy.get("#author").type("The author is Juan")
         cy.get("#url").type("http://cypress.com")

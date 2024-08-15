@@ -7,11 +7,13 @@ const getAll = async () => {
 }
 
 const getBlogsByUser = async (user) => {
-  console.log(user)
-  const response = await axios.get(baseUrl + "/user", {
-    headers: { Authorization: `Bearer ${user.token}` },
-  })
-  return response
+  if (user) {
+    const response = await axios.get(baseUrl + "/user", {
+      headers: { Authorization: `Bearer ${user.token}` },
+    })
+    return response
+  }
+  return false
 }
 
 const saveBlog = async (user, data) => {
